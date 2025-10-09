@@ -7,12 +7,12 @@
 
 
 body {
-    margin: 0;
-    font-size: 16px;
-    min-height: 100vh;
-    background-color: #979797;
-    color: #fff;
-    font-family: 'Minecraftia', sans-serif;
+  margin: 0;
+  font-size: 16px;
+  min-height: 100vh;
+  background-color: #979797;
+  color: #fff;
+  font-family: 'Minecraftia', sans-serif;
 }
 
 
@@ -133,6 +133,7 @@ body {
   * {
     @apply border-border outline-ring/50;
   }
+
   body {
     @apply bg-background text-foreground;
   }
@@ -146,3 +147,106 @@ body {
     inset 2px 2px 0 #aaa,
     2px 2px 0 #000;
 } */
+
+.pixel-corners,
+.pixel-corners--wrapper {
+  clip-path: polygon(0px calc(100% - 6px),
+      3px calc(100% - 6px),
+      3px calc(100% - 3px),
+      6px calc(100% - 3px),
+      6px 100%,
+      calc(100% - 6px) 100%,
+      calc(100% - 6px) calc(100% - 3px),
+      calc(100% - 3px) calc(100% - 3px),
+      calc(100% - 3px) calc(100% - 6px),
+      100% calc(100% - 6px),
+      100% 6px,
+      calc(100% - 3px) 6px,
+      calc(100% - 3px) 3px, 
+      calc(100% - 6px) 3px,
+      calc(100% - 6px) 0px,
+      6px 0px,
+      6px 3px,
+      3px 3px,
+      3px 6px,
+      0px 6px);
+  position: relative;
+}
+
+.pixel-corners {
+  border: 3px solid transparent;
+}
+
+.pixel-corners--wrapper {
+  width: fit-content;
+  height: fit-content;
+}
+
+.pixel-corners--wrapper .pixel-corners {
+  display: block;
+  clip-path: polygon(3px 6px,
+      6px 6px,
+      6px 3px,
+      calc(100% - 6px) 3px,
+      calc(100% - 6px) 6px,
+      calc(100% - 3px) 6px,
+      calc(100% - 3px) calc(100% - 6px),
+      calc(100% - 6px) calc(100% - 6px),
+      calc(100% - 6px) calc(100% - 3px),
+      6px calc(100% - 3px),
+      6px calc(100% - 6px),
+      3px calc(100% - 6px));
+}
+
+.pixel-corners::after,
+.pixel-corners--wrapper::after {
+  content: "";
+  position: absolute;
+  clip-path: polygon(0px calc(100% - 6px),
+      3px calc(100% - 6px),
+      3px calc(100% - 3px),
+      6px calc(100% - 3px),
+      6px 100%,
+      calc(100% - 6px) 100%,
+      calc(100% - 6px) calc(100% - 3px),
+      calc(100% - 3px) calc(100% - 3px),
+      calc(100% - 3px) calc(100% - 6px),
+      100% calc(100% - 6px),
+      100% 6px,
+      calc(100% - 3px) 6px,
+      calc(100% - 3px) 3px,
+      calc(100% - 6px) 3px,
+      calc(100% - 6px) 0px,
+      6px 0px,
+      6px 3px,
+      3px 3px,
+      3px 6px,
+      0px 6px,
+      0px 50%,
+      3px 50%,
+      3px 6px,
+      6px 6px,
+      6px 3px,
+      calc(100% - 6px) 3px,
+      calc(100% - 6px) 6px,
+      calc(100% - 3px) 6px,
+      calc(100% - 3px) calc(100% - 6px),
+      calc(100% - 6px) calc(100% - 6px),
+      calc(100% - 6px) calc(100% - 3px),
+      6px calc(100% - 3px),
+      6px calc(100% - 6px),
+      3px calc(100% - 6px),
+      3px 50%,
+      0px 50%);
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background: #000000;
+  display: block;
+  pointer-events: none;
+}
+
+.pixel-corners::after {
+  margin: -3px;
+}
