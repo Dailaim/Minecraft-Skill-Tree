@@ -1,0 +1,107 @@
+{
+  "name": "Minecraft",
+  "description": "El corazón y la historia del juego",
+  "image": "https://minecraft.capta.co/Images/Grass.webp",
+  "children": [
+    {
+      "name": "La Edad de Piedra",
+      "description": "Pica piedra con tu nuevo pico.",
+      "image": "https://minecraft.capta.co/Images/Wooden_Pickaxe.webp",
+      "children": [
+        {
+          "name": "Mejorando herramientas",
+          "description": "Fabrica un pico mejor.",
+          "image": "https://minecraft.capta.co/Images/Stone_Pickaxe.webp",
+          "children": [
+            {
+              "name": "La Edad de Hierro",
+              "description": "Funde un lingote de hierro.",
+              "image": "https://minecraft.capta.co/Images/Iron_Ingot.webp",
+              "children": [
+                {
+                  "name": "Vístete",
+                  "description": "Protégete con una parte de la armadura de hierro.",
+                  "image": "https://minecraft.capta.co/Images/Iron_Chestplate.webp",
+                  "children": [
+                    {
+                      "name": "Hoy no, gracias",
+                      "description": "Desvía un proyectil con un escudo.",
+                      "image": "https://minecraft.capta.co/Images/Shield.webp",
+                      "children": []
+                    }
+                  ]
+                },
+                {
+                  "name": "¡La cosa está que arde!",
+                  "description": "Llena un cubo con lava.",
+                  "image": "https://minecraft.capta.co/Images/Lava_Bucket.webp",
+                  "children": [
+                    {
+                      "name": "Mente fría",
+                      "description": "Consigue un bloque de obsidiana.",
+                      "image": "https://minecraft.capta.co/Images/Obsidian.webp",
+                      "children": [
+                        {
+                          "name": "Plus ultra",
+                          "description": "Construye, activa y atraviesa un portal del Nether.",
+                          "image": "https://minecraft.capta.co/Images/Flint_and_Steel.webp",
+                          "children": [
+                            {
+                              "name": "Zombiólogo",
+                              "description": "Debilita y cura a un aldeano zombi.",
+                              "image": "https://minecraft.capta.co/Images/Golden_Apple.webp",
+                              "children": []
+                            },
+                            {
+                              "name": "Ojo espía",
+                              "description": "Sigue un ojo de ender.",
+                              "image": "https://minecraft.capta.co/Images/Eye_of_Ender.webp",
+                              "children": [
+                                {
+                                  "name": "¿Se acabó?",
+                                  "description": "Atraviesa un portal del End.",
+                                  "image": "https://minecraft.capta.co/Images/End_Stone.webp",
+                                  "children": []
+                                }
+                              ]
+                            }
+                          ]
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "name": "¿No es hierrónico?",
+                  "description": "Mejora tu pico.",
+                  "image": "https://minecraft.capta.co/Images/Iron_Pickaxe.webp",
+                  "children": [
+                    {
+                      "name": "¡Diamantes!",
+                      "description": "Consigue un diamante.",
+                      "image": "https://minecraft.capta.co/Images/Diamond.webp",
+                      "children": [
+                        {
+                          "name": "Cúbreme de diamantes",
+                          "description": "La armadura de diamante salva vidas.",
+                          "image": "https://minecraft.capta.co/Images/Diamond_Chestplate.webp",
+                          "children": []
+                        },
+                        {
+                          "name": "Aprendiz de mago",
+                          "description": "Encanta un objeto en una mesa de encantamientos.\t",
+                          "image": "https://minecraft.capta.co/Images/Enchanted_Book.webp",
+                          "children": []
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
