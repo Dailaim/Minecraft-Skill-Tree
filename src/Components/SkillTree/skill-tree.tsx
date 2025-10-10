@@ -23,7 +23,7 @@ export function SkillTree() {
 	// Initialize background music
 	useBackgroundMusic();
 
-	const { minX, minY, width, height } = dimensions;
+	const { minX, minY, maxX, maxY, width, height } = dimensions;
 
 	return (
 		<SkillTreeContainer width={width} height={height}>
@@ -34,6 +34,8 @@ export function SkillTree() {
 				height={height}
 				minX={minX}
 				minY={minY}
+				maxX={maxX}
+				maxY={maxY}
 			/>
 
 			{/* Nodes */}
