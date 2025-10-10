@@ -43,7 +43,8 @@ function ButtonSkillTreeNode({
 			onClick={onClick}
 			disabled={isDisabled}
 			className={cn(
-				" w-16 h-16 transition-all duration-300 pixel-corners p-0 m-0 border-2 border-black relative cursor-pointer",
+				" w-16 h-16 transition-all duration-300 pixel-corners p-0 m-0 border-2 border-black relative ",
+				isDisabled || "cursor-pointer",
 			)}
 			style={{ zIndex: 99999, position: "relative" }}
 			aria-label={node.name}
