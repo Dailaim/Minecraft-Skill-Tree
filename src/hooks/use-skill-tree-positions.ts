@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import {
 	type NormalizedSkillNode,
 	selectAllNodes,
@@ -44,67 +44,112 @@ export function useSkillTreePositions() {
 		const calculatePositions = (
 			node: SkillTreeNode,
 			x: number,
-			y: number,
+			startY: number,
 			parentPos?: { x: number; y: number },
-		): NodePosition[] => {
+		): { positions: NodePosition[]; usedHeight: number } => {
+			const verticalSpacing = 80;
+			const horizontalSpacing = 120;
+
+			// Si no tiene hijos, ocupa una posición
+			if (!node.children || node.children.length === 0) {
+				const currentPos: NodePosition = {
+					x,
+					y: startY,
+					nodeId: node.id,
+					unlocked: unlockedNodeIds.includes(node.id),
+					parentPos,
+				};
+				return { positions: [currentPos], usedHeight: 1 };
+			}
+
+			// Calcula las posiciones de todos los hijos primero
+			const childResults: Array<{
+				positions: NodePosition[];
+				usedHeight: number;
+			}> = [];
+			let currentY = startY;
+
+			for (const child of node.children) {
+				const childResult = calculatePositions(
+					child,
+					x + horizontalSpacing,
+					currentY,
+					{ x, y: 0 }, // Temporalmente, actualizaremos después
+				);
+				childResults.push(childResult);
+				currentY += childResult.usedHeight * verticalSpacing;
+			}
+
+			// Calcula el centro del nodo actual basándose en sus hijos
+			const totalChildrenHeight = childResults.reduce(
+				(sum, result) => sum + result.usedHeight,
+				0,
+			);
+			const firstChildY = childResults[0]?.positions[0]?.y ?? startY;
+			const lastChildY =
+				childResults[childResults.length - 1]?.positions[0]?.y ?? startY;
+			const centerY = (firstChildY + lastChildY) / 2;
+
+			// Crea la posición del nodo actual
 			const currentPos: NodePosition = {
 				x,
-				y,
+				y: centerY,
 				nodeId: node.id,
 				unlocked: unlockedNodeIds.includes(node.id),
 				parentPos,
 			};
 
-			if (!node.children || node.children.length === 0) {
-				return [currentPos];
-			}
+			// Actualiza las posiciones de los hijos con la posición correcta del padre
+			const allPositions = childResults.flatMap((result) =>
+				result.positions.map((pos) => {
+					if (pos.parentPos && pos.parentPos.x === x) {
+						return { ...pos, parentPos: { x, y: centerY } };
+					}
+					return pos;
+				}),
+			);
 
-			const childPositions: NodePosition[] = [];
-			const verticalSpacing = 140;
-
-			node.children.forEach((child: SkillTreeNode, index: number) => {
-				const childY =
-					y +
-					index * verticalSpacing -
-					((node.children.length - 1) * verticalSpacing) / 2;
-				const childX = x + 120;
-				childPositions.push(
-					...calculatePositions(child, childX, childY, { x, y }),
-				);
-			});
-
-			return [currentPos, ...childPositions];
+			return {
+				positions: [currentPos, ...allPositions],
+				usedHeight: totalChildrenHeight,
+			};
 		};
 
 		const tree = buildTree(rootNodeId);
 		if (tree) {
-			const allPositions = calculatePositions(tree, 0, 0);
-			setPositions(allPositions);
+			const result = calculatePositions(tree, 0, 0);
+			setPositions(result.positions);
 		}
 	}, [nodes, unlockedNodeIds, rootNodeId]);
 
 	// Calculate viewBox to fit all nodes with fallback values
-	const minX =
-		positions.length > 0 ? Math.min(...positions.map((p) => p.x)) - 50 : 0;
-	const maxX =
-		positions.length > 0 ? Math.max(...positions.map((p) => p.x)) + 150 : 1000;
-	const minY =
-		positions.length > 0 ? Math.min(...positions.map((p) => p.y)) - 50 : 0;
-	const maxY =
-		positions.length > 0 ? Math.max(...positions.map((p) => p.y)) + 100 : 800;
+	const dimensions = useMemo(() => {
+		const minX =
+			positions.length > 0 ? Math.min(...positions.map((p) => p.x)) - 50 : 0;
+		const maxX =
+			positions.length > 0
+				? Math.max(...positions.map((p) => p.x)) + 150
+				: 1000;
+		const minY =
+			positions.length > 0 ? Math.min(...positions.map((p) => p.y)) - 50 : 0;
+		const maxY =
+			positions.length > 0 ? Math.max(...positions.map((p) => p.y)) + 100 : 800;
 
-	const width = maxX - minX;
-	const height = maxY - minY;
+		const width = maxX - minX;
+		const height = maxY - minY;
 
-	return {
-		positions,
-		dimensions: {
+		return {
 			minX,
 			maxX,
 			minY,
 			maxY,
 			width,
 			height,
-		},
+		};
+	}, [positions]);
+
+	return {
+		positions,
+		dimensions,
 	};
 }
