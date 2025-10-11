@@ -1,8 +1,11 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
+import { toast } from "sonner";
+import * as v from "valibot";
 import { loadSkillTree } from "../../features/skill-tree-slice";
 import { useAppDispatch } from "../../hooks";
+import { trycatch } from "../../utils";
 import { SkillTree } from "./skill-tree";
 
 interface NestedSkillNode {
@@ -12,75 +15,85 @@ interface NestedSkillNode {
 	children: NestedSkillNode[];
 }
 
+const nestedSkillNodeSchema: v.GenericSchema<NestedSkillNode> = v.object({
+	name: v.string(),
+	description: v.string(),
+	image: v.string(),
+	children: v.array(v.lazy(() => nestedSkillNodeSchema)),
+});
+
 interface SkillTreeLoaderProps {
 	data: NestedSkillNode;
 }
 
 export function SkillTreeLoader({ data: defaultData }: SkillTreeLoaderProps) {
 	const dispatch = useAppDispatch();
-	const [isLoading, setIsLoading] = useState(false);
-	const [error, setError] = useState<string | null>(null);
 
 	useEffect(() => {
 		const loadData = async () => {
-			try {
-				// Obtener URL desde query params
-				const urlParams = new URLSearchParams(window.location.search);
-				const dataUrl = urlParams.get("dataUrl");
-        // deberia usar React Query Lo se
-				if (dataUrl) {
-					setIsLoading(true);
-					setError(null);
-
-					// Cargar datos desde la URL
-					const response = await fetch(dataUrl);
-
-					if (!response.ok) {
-						throw new Error(
-							`Error al cargar datos: ${response.status} ${response.statusText}`,
-						);
-					}
-
-					const jsonData = await response.json();
-					dispatch(loadSkillTree(jsonData));
-					setIsLoading(false);
-				} else {
-					// Usar datos por defecto
-					dispatch(loadSkillTree(defaultData));
-				}
-			} catch (err) {
-				setError(
-					err instanceof Error
-						? err.message
-						: "Error desconocido al cargar los datos",
-				);
-				setIsLoading(false);
-				// En caso de error, cargar datos por defecto
+			const urlParams = new URLSearchParams(window.location.search);
+			const dataUrl = urlParams.get("dataUrl");
+			if (!dataUrl) {
 				dispatch(loadSkillTree(defaultData));
+				throw new Error("Error loadingData");
 			}
+
+			const toastID = toast.loading("Cargando datos...");
+
+			const [data, error] = await trycatch(fetch(dataUrl));
+
+			if (error) {
+				toast.error(error.message, {
+					id: toastID,
+					description: "Sean cargado los datos por defecto",
+				});
+				throw new Error("Error loadingData");
+			}
+
+			if (!data.ok) {
+				toast.error(
+					`Error al cargar datos: ${data.status} ${data.statusText}`,
+					{
+						id: toastID,
+						description: "Sean cargado los datos por defecto",
+					},
+				);
+				throw new Error("Error loadingData");
+			}
+
+			const [jsonData, errorParsing] = await trycatch(data.json());
+
+			if (errorParsing) {
+				toast.error("Error al analizar los datos", {
+					id: toastID,
+					description: "Sean cargado los datos por defecto",
+				});
+				throw new Error("Error loadingData");
+			}
+
+			const [parsedData, errorParsing2] = trycatch(() =>
+				v.parse(nestedSkillNodeSchema, jsonData),
+			);
+
+			if (errorParsing2) {
+				toast.error("Error al analizar los datos", {
+					id: toastID,
+					description: "Sean cargado los datos por defecto",
+				});
+				throw new Error("Error loadingData");
+			}
+
+			toast.success("Datos cargados correctamente", {
+				description: "El árbol de habilidades se ha cargado correctamente",
+				id: toastID,
+			});
+			dispatch(loadSkillTree(parsedData));
 		};
 
-		loadData();
+		loadData().catch(() => {
+			dispatch(loadSkillTree(defaultData));
+		});
 	}, [dispatch, defaultData]);
-
-	if (isLoading) {
-		return (
-			<div className="flex items-center justify-center h-full">
-				<p className="text-white font-minecraft text-xl">Cargando datos...</p>
-			</div>
-		);
-	}
-
-	if (error) {
-		return (
-			<div className="flex flex-col items-center justify-center h-full gap-4">
-				<p className="text-red-500 font-minecraft text-lg">⚠️ {error}</p>
-				<p className="text-white font-minecraft text-sm">
-					Usando datos por defecto
-				</p>
-			</div>
-		);
-	}
 
 	return <SkillTree />;
 }
