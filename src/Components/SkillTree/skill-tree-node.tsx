@@ -43,7 +43,7 @@ export function SkillTreeNode({
 		<TooltipProvider delayDuration={0}>
 			<Tooltip
 				delayDuration={0}
-				open={node.id === "node-0" ? true : isHover}
+				open={isHover}
 				onOpenChange={changeHover}
 			>
 				<TooltipTrigger asChild>
