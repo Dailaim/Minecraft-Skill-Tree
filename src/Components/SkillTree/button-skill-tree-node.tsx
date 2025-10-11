@@ -74,6 +74,7 @@ function ButtonSkillTreeNode({
 					src={node.image || "/placeholder.svg"}
 					alt={node.name}
 					className="pixelated p-1 object-contain w-full h-full max-w-full max-h-full"
+					draggable={false}
 				/>
 			</div>
 		</button>
