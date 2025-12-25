@@ -13,11 +13,13 @@
   },
   "dependencies": {
     "@biomejs/biome": "^2.2.5",
+    "@elysiajs/static": "^1.4.7",
     "@radix-ui/react-tooltip": "^1.2.8",
     "@reduxjs/toolkit": "^2.9.0",
     "@tailwindcss/vite": "^4.1.14",
     "@types/bun": "^1.2.23",
     "clsx": "^2.1.1",
+    "elysia": "^1.4.19",
     "react": "^19.2.0",
     "react-dom": "^19.2.0",
     "react-redux": "^9.2.0",

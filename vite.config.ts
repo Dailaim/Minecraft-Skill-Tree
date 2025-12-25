@@ -5,10 +5,12 @@ import { defineConfig } from "vite";
 import svgr from "vite-plugin-svgr";
 
 export default defineConfig({
+	base: './',
 	plugins: [react(), svgr(), tailwindcss()],
 	server: {
 		port: 3000,
 	},
+  
 	css: {
 		modules: {
 			exportGlobals: false,
